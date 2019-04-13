@@ -1,0 +1,152 @@
+<div class="titulo">
+  <h3>
+    Cadastro de Veiculo
+  </h3>
+</div>
+
+<div class="row">
+  <div class="col s12 m3 l3">
+    <mat-form-field>
+      <input matInput placeholder="Codigo" type="number" [(ngModel)]="veiculo.id" required>
+    </mat-form-field>
+  </div>
+  <div class="col s12 m9 l9">
+    <mat-form-field>
+      <input matInput placeholder="Placa" type="text" [(ngModel)]="veiculo.placa" required>
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12 m6 l6">
+    <mat-form-field>
+      <input matInput placeholder="Renavam" type="number" [(ngModel)]="veiculo.renavam" required>
+    </mat-form-field>
+  </div>
+  <div class="col s12 m6 l6">
+    <mat-form-field>
+      <input matInput placeholder="Chasis" type="number" [(ngModel)]="veiculo.chassi" required>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <div class="col s12 m6 l6">
+      <mat-form-field>
+        <input matInput placeholder="Marca" type="text" [(ngModel)]="veiculo.marca" required>
+      </mat-form-field>
+    </div>
+    <div class="col s12 m6 l6">
+      <mat-form-field>
+        <input matInput placeholder="Modelo" type="text" [(ngModel)]="veiculo.modelo" required>
+      </mat-form-field>
+    </div>  
+
+    <div class="row">
+      <div class="col s12 m6 l6">
+        <mat-form-field>
+          <input matInput placeholder="Ano" type="number" [(ngModel)]="veiculo.ano" required>
+        </mat-form-field>
+      </div>
+      <div class="col s12 m3 l3">
+        <mat-form-field>
+          <mat-select placeholder="Cor" name="cor" [(ngModel)]="veiculo.cor" >
+            <mat-option *ngFor="let cor of cores" [value]="cor">
+                {{cor.descricao}}
+            </mat-option>
+        </mat-select>
+        </mat-form-field>
+      </div>      
+
+      <div class="row footer-btn">
+        <div class="button-row col s12"> 
+            <button mat-raised-button (click)="voltar()" >Voltar</button>    
+            <button *ngIf="!edicao" mat-raised-button color="green" (click)="salvarVeiculo()">Salvar</button>
+            <button *ngIf="edicao" mat-raised-button color="green" (click)="atualizar()">Atualizar</button>
+        </div> 
+      </div>
+
+<div class="row heading">
+  <div class="col s12 m12 l4">
+    <h2 class="title">Lista Veiculos</h2>
+    <div class="heading_tools">
+      <div class="search">
+        <mat-form-field>
+          <mat-icon svgIcon="slidenav-search"></mat-icon>
+          <input matInput name="pesquisar" placeholder="Pesquisar" (keyup)="aplicarFiltro($event.target.value)">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="col s12 m12 l12">
+    <mat-table [dataSource]="dataSource" matSort (matSortChange)=ordenar($event) matSortDirection=asc matSortDisableClear class="table-striped">
+      <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->   
+
+      <ng-container matColumnDef="actionsColumn">
+        <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <button mat-icon-button>
+                <mat-icon class="link_action" svgIcon="form-trash" matTooltip="Excluir" (click)="excluir(element.id)"></mat-icon>
+            </button>  
+            <button mat-icon-button>
+                <mat-icon class="link_action" svgIcon="form-edit" matTooltip="Editar" (click)="editar(element.id)"></mat-icon>
+            </button>
+        </mat-cell>
+      </ng-container>  
+
+      <!-- Codigo -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Código </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+      </ng-container>
+
+      <!-- Nome -->
+      <ng-container matColumnDef="placa">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Placa </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.placa}} </mat-cell>
+      </ng-container>
+
+      <!-- Idade -->
+      <ng-container matColumnDef="renavam">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Renavam </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.renavam}} </mat-cell>
+      </ng-container>
+
+      <!-- CPF -->
+      <ng-container matColumnDef="chasi">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Chasi </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.chassi}} </mat-cell>
+      </ng-container>
+
+      <!-- RG -->
+      <ng-container matColumnDef="marca">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Marca </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.marca}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="modelo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Modelo </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.modelo}} </mat-cell>
+      </ng-container>            
+
+      <ng-container matColumnDef="ano">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Ano </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.ano}} </mat-cell>
+      </ng-container>      
+
+      <ng-container matColumnDef="cor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Cor </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.cor.descricao}} </mat-cell>
+      </ng-container>      
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator [pageSize]="2" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
